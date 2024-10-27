@@ -1,0 +1,43 @@
+.custom_field {
+   position: relative;
+   font-size: 14px;
+   margin-bottom: 5px;
+   width: 100%;
+   display: flex;
+   align-items: center;
+}
+.custom_field input {
+   border: none;
+   appearance: none;
+   background: #f2f2f2;
+   padding: 6px;
+   border-radius: 5px;
+   width: 100%;
+   outline: none;
+   font-size: 16px;
+}
+.custom_field .placeholder {
+   position: absolute;
+   left: 10px;
+   top: 20px;
+   transform: translateY(-50%);
+   color: #aaa;
+   transition:
+      top 0.3s ease,
+      font-size 0.3s ease,
+      color 0.3s ease;
+}
+.custom_field input:valid + .placeholder,
+.custom_field input:focus + .placeholder {
+   top: 0px;
+   font-size: 12px;
+   color: #222;
+   background: #fff;
+   padding: 0.2rem 0.3rem 0.2rem 0.5rem;
+}
+.custom_field.one input {
+   background: none;
+   border: 1px solid #ddd;
+   transition: border-color 0.3s ease;
+   transition-delay: 0.1s;
+}
