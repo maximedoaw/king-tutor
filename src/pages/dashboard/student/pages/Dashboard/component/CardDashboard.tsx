@@ -6,15 +6,24 @@ import tutor from '../../../../../../assets/images/tutor.png';
 import flag from '../../../../../../assets/images/flag.png';
 import pic1 from '../../../../../../assets/images/pic1.jpg';
 import avatar5 from '../../../../../../assets/images/Avatar5.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Modal2 from './Modal2';
 import Calendar from 'react-calendar';
-import { scheduleData } from '../../../../../../constants/card';
+import { DaySchedule, scheduleData } from '../../../../../../constants/card';
 
-const Time = ({ time } : { time : string }) =>{
+const Time = (
+   { 
+    time, 
+    isChecked 
+   } : 
+   {
+      time : string, 
+      isChecked : boolean
+  }
+) =>{
 
-   const [selectTime, setSelectTime] = useState(false)
+   const [selectTime, setSelectTime] = useState(isChecked)
 
    return (
       <p
@@ -43,7 +52,9 @@ const CardDashbaord = ({
      const [isModalOpen2, setIsModalOpen2] = useState<boolean>(false);
      const [calendarData, setCalendarData] = useState(scheduleData)
      const [currentDate, setCurrentDate] = useState(new Date()); // Initialize with today's date
-
+     const [dateChecked, setDateChecked] = useState<DaySchedule[]>([]);
+     const [originDate, setOriginDate] = useState<number[]>([])
+     const [count, setCount] = useState(0)
      // Helper function to get the start and end dates of the current week
      const getWeekRange = (date : any) => {
         const startOfWeek = new Date(date);
@@ -53,6 +64,7 @@ const CardDashbaord = ({
            d.setDate(startOfWeek.getDate() + i);
            return d;
         });
+       // console.log(weekDates)
         return weekDates;
      };
 
@@ -62,14 +74,28 @@ const CardDashbaord = ({
         const prevWeekDate = new Date(currentDate);
         prevWeekDate.setDate(currentDate.getDate() - 7);
         setCurrentDate(prevWeekDate);
+        setCount((prev) => prev - 1)
+
      };
 
      const handleNextWeek = () => {
         const nextWeekDate = new Date(currentDate);
         nextWeekDate.setDate(currentDate.getDate() + 7);
         setCurrentDate(nextWeekDate);
+        setCount((prev) => prev + 1);
+
      };
 
+      useEffect(() =>{
+        //let originDate = Array.from({})
+        if (currentDate) {
+           setDateChecked((prev: any) => [...prev, calendarData]);
+           setOriginDate((prev) => Array.from({ length : count}).map((_ , i) => i ))
+
+           console.log(originDate);
+        }
+      },[count])
+      
    return (
       <>
          <div className=" flex-[1_1_100px] relative my-8 mt-0">
@@ -154,7 +180,7 @@ const CardDashbaord = ({
                         </p>
                         <p className="label text-xs pt-0 flex gap-x-1">
                            <GraduationCapIcon></GraduationCapIcon>
-                           <span>Javascript</span>
+                           <span>{subject}</span>
                         </p>
                      </div>
                   </div>
@@ -284,7 +310,12 @@ const CardDashbaord = ({
                                     </p>
                                     <div className="flex flex-col gap-y-1">
                                        {data.times.map((time, idx) => (
-                                          <Time time={time} key={idx}/>
+                                          <Time 
+                                            time={time.hour} 
+                                            key={idx}
+                                            isChecked = {time.isChecked}
+                                            
+                                          />
                                        ))}
                                     </div>
                                  </div>
